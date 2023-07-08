@@ -8,16 +8,33 @@ export default function DayOfMonth({
   events,
   setShowDialogDelete,
   setSelectedItem,
+  setShowDialogUpdate,
+  setSelectedDate,
 }) {
   const [totalEvents, setTotalEvents] = useState(0)
+
+  function handleClickAddEvent(ev) {
+    if (
+      (ev?.target?.id.includes("event") ||
+        ev?.target?.id.includes("day-of-month")) &&
+      totalEvents < 3
+    ) {
+      setShowDialogUpdate(true)
+      setSelectedDate(date)
+    }
+  }
 
   useEffect(() => {
     setTotalEvents(events?.length)
   }, [events.length, totalEvents])
 
   return (
-    <div className="w-[14vw] min-h-[7vw] border relative flex flex-col p-1 gap-y-1">
-      <span>{date}</span>
+    <div
+      id="day-of-month"
+      className="w-[14vw] min-h-[7vw] border relative flex flex-col p-1 gap-y-1 cursor-pointer"
+      onClick={(ev) => handleClickAddEvent(ev)}
+    >
+      <span id="day-of-month__date">{date}</span>
       {events?.map((event, idx) => (
         <Event
           key={idx}
