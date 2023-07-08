@@ -19,7 +19,9 @@ export default function Event({ event, setShowDialogDelete, setSelectedItem }) {
         <button className="uppercase border rounded-sm px-2">update</button>
       </div>
       <p id="event-name">{event.eventName}</p>
-      <p id="event-time">{event.time}</p>
+      <p id="event-time">
+        {event.time.value} {event.time.meridiem}
+      </p>
       <p id="event-invitees">{event.invitees}</p>
     </div>
   )

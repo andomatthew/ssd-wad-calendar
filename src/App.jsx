@@ -46,7 +46,10 @@ function App() {
   const [showDialogUpdate, setShowDialogUpdate] = useState(false)
   const [form] = useState({
     eventName: "",
-    time: 0,
+    time: {
+      value: 0,
+      meridiem: "AM",
+    },
     invitees: "",
     id: "",
     date: 0,
