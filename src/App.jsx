@@ -4,6 +4,7 @@ import CalendarHeader from "./components/CalendarHeader"
 import CalendarOffset from "./components/CalendarOffset"
 import DayOfMonth from "./components/DayOfMonth"
 import DialogDeleteConfirmation from "./components/Dialog/DialogDeleteConfirmation"
+import DialogUpdateEvent from "./components/Dialog/DialogUpdateEvent"
 
 import "./assets/main.css"
 
@@ -39,8 +40,18 @@ function App() {
   const [totalDaysCurrentMonth, setTotalDaysCurrentMonth] = useState(0)
   const [offsetDate, setOffsetDate] = useState(0)
   const [events, setEvents] = useState([])
-  const [showDialogDelete, setShowDialogDelete] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(0)
+  const [showDialogDelete, setShowDialogDelete] = useState(false)
+  const [showDialogUpdate, setShowDialogUpdate] = useState(false)
+  const [form] = useState({
+    eventName: "",
+    time: 0,
+    invitees: "",
+    id: "",
+    date: 0,
+  })
+  const [isUpdate, setIsUpdate] = useState(false)
 
   function initCurrentMonth() {
     const now = new Date()
@@ -85,6 +96,19 @@ function App() {
     setShowDialogDelete(false)
   }
 
+  function createEvent(body) {
+    const obj = {
+      ...body,
+      id: Date.now().toString(36),
+      date: selectedDate,
+    }
+    setEvents((arr) => [...arr, obj])
+    const updatedEvents = [...events]
+    updatedEvents.push(obj)
+    localStorage.setItem("list", JSON.stringify(updatedEvents))
+    setShowDialogUpdate(false)
+  }
+
   useEffect(() => {
     const persistList = JSON.parse(localStorage.getItem("list"))
     if (persistList?.length && !events?.length) {
@@ -117,6 +141,8 @@ function App() {
                 events={setEventsToDayOfMonth(itemIdx + 1)}
                 setShowDialogDelete={setShowDialogDelete}
                 setSelectedItem={setSelectedItem}
+                setShowDialogUpdate={setShowDialogUpdate}
+                setSelectedDate={setSelectedDate}
               />
             ))}
           </div>
@@ -127,6 +153,14 @@ function App() {
           setShowDialogDelete={setShowDialogDelete}
           selectedItem={selectedItem}
           handleDeleteEvent={deleteEvent}
+        />
+      )}
+      {showDialogUpdate && (
+        <DialogUpdateEvent
+          form={form}
+          isUpdate={isUpdate}
+          setShowDialogUpdate={setShowDialogUpdate}
+          createEvent={createEvent}
         />
       )}
     </main>
