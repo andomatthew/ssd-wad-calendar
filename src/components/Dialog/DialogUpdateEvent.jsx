@@ -9,6 +9,7 @@ export default function DialogUpdateEvent({
 }) {
   const [eventName, setEventName] = useState("")
   const [time, setTime] = useState("")
+  const [meridiem, setMeridiem] = useState("AM")
   const [invitees, setInvitees] = useState("")
 
   const isAllowedSubmit = useMemo(() => {
@@ -23,7 +24,16 @@ export default function DialogUpdateEvent({
 
   function handleSubmit(ev) {
     ev.preventDefault()
-    createEvent({ eventName, time: Number(time), invitees })
+    console.log({
+      eventName,
+      time: { value: Number(time), meridiem },
+      invitees,
+    })
+    createEvent({
+      eventName,
+      time: { value: Number(time), meridiem },
+      invitees,
+    })
   }
 
   useEffect(() => {
@@ -59,19 +69,33 @@ export default function DialogUpdateEvent({
               onChange={(ev) => setEventName(ev.target.value)}
             />
           </div>
-          <div className="flex flex-col gap-y-1">
-            <label htmlFor="input-event-time">
-              Time <span>(range from 0 ~ 23)</span>
-            </label>
-            <input
-              id="input-event-time"
-              type="number"
-              className="border rounded-md p-2"
-              value={time}
-              min={0}
-              max={23}
-              onChange={(ev) => setTime(ev.target.value)}
-            />
+          <div className="flex gap-x-2">
+            <div className="flex flex-col gap-y-1 w-2/3">
+              <label htmlFor="input-event-time">
+                Time <span>(range from 1 ~ 12)</span>
+              </label>
+              <input
+                id="input-event-time"
+                type="number"
+                className="border rounded-md p-2"
+                value={time}
+                min={0}
+                max={23}
+                onChange={(ev) => setTime(ev.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-y-1 w-1/3">
+              <label htmlFor="input-event-meridiem">Meridiem</label>
+              <select
+                id="input-event-meridiem"
+                className="border rounded-md p-2"
+                value={meridiem}
+                onChange={(ev) => setMeridiem(ev.target.value)}
+              >
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
           </div>
           <div className="flex flex-col gap-y-1">
             <label htmlFor="input-event-invitees">
