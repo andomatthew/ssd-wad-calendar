@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import CalendarHeader from "./components/CalendarHeader"
 import CalendarOffset from "./components/CalendarOffset"
 import DayOfMonth from "./components/DayOfMonth"
+import DialogDeleteConfirmation from "./components/Dialog/DialogDeleteConfirmation"
 
 import "./assets/main.css"
 
@@ -38,6 +39,8 @@ function App() {
   const [totalDaysCurrentMonth, setTotalDaysCurrentMonth] = useState(0)
   const [offsetDate, setOffsetDate] = useState(0)
   const [events, setEvents] = useState([])
+  const [showDialogDelete, setShowDialogDelete] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
 
   function initCurrentMonth() {
     const now = new Date()
@@ -74,6 +77,14 @@ function App() {
     return result
   }
 
+  function deleteEvent() {
+    const list = JSON.parse(localStorage.getItem("list"))
+    const filteredList = list.filter((item) => item?.id !== selectedItem?.id)
+    localStorage.setItem("list", JSON.stringify(filteredList))
+    setEvents(filteredList)
+    setShowDialogDelete(false)
+  }
+
   useEffect(() => {
     const persistList = JSON.parse(localStorage.getItem("list"))
     if (persistList?.length && !events?.length) {
@@ -104,11 +115,20 @@ function App() {
                 key={itemIdx}
                 date={itemIdx + 1}
                 events={setEventsToDayOfMonth(itemIdx + 1)}
+                setShowDialogDelete={setShowDialogDelete}
+                setSelectedItem={setSelectedItem}
               />
             ))}
           </div>
         </div>
       </div>
+      {showDialogDelete && (
+        <DialogDeleteConfirmation
+          setShowDialogDelete={setShowDialogDelete}
+          selectedItem={selectedItem}
+          handleDeleteEvent={deleteEvent}
+        />
+      )}
     </main>
   )
 }
