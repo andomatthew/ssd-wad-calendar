@@ -69,7 +69,7 @@ function App() {
     setOffsetDate(offset)
   }
 
-  function tes(date = 0) {
+  function setEventsToDayOfMonth(date = 0) {
     const result = events.filter((event) => event.date === date)
     return result
   }
@@ -103,7 +103,7 @@ function App() {
               <DayOfMonth
                 key={itemIdx}
                 date={itemIdx + 1}
-                events={tes(itemIdx + 1)}
+                events={setEventsToDayOfMonth(itemIdx + 1)}
               />
             ))}
           </div>
