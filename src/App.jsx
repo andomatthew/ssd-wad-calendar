@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react"
 
+import CalendarHeader from "./components/CalendarHeader"
+import CalendarOffset from "./components/CalendarOffset"
+import DayOfMonth from "./components/DayOfMonth"
+
 import "./assets/main.css"
 
 const dayList = [
@@ -33,6 +37,7 @@ function App() {
   const [currentYear, setCurrentYear] = useState(0)
   const [totalDaysCurrentMonth, setTotalDaysCurrentMonth] = useState(0)
   const [offsetDate, setOffsetDate] = useState(0)
+  const [events, setEvents] = useState([])
 
   function initCurrentMonth() {
     const now = new Date()
@@ -64,6 +69,18 @@ function App() {
     setOffsetDate(offset)
   }
 
+  function tes(date = 0) {
+    const result = events.filter((event) => event.date === date)
+    return result
+  }
+
+  useEffect(() => {
+    const persistList = JSON.parse(localStorage.getItem("list"))
+    if (persistList?.length && !events?.length) {
+      setEvents(persistList)
+    }
+  }, [events])
+
   useEffect(() => {
     initCurrentMonth()
     initCurrentYear()
@@ -78,25 +95,16 @@ function App() {
       </h1>
       <div className="wrapper mx-auto">
         <div className="calendar flex flex-col">
-          <div className="calendar__header flex flex-wrap">
-            {dayList.map((day) => (
-              <div
-                key={day}
-                className="bg-black text-white text-center text-lg w-[14vw]"
-              >
-                {day}
-              </div>
-            ))}
-          </div>
+          <CalendarHeader dayList={dayList} />
           <div className="calendar__body flex flex-wrap">
-            {new Array(offsetDate).fill(0).map((_, itemIdx) => (
-              <div key={itemIdx} className="w-[14vw] min-h-[7vw]"></div>
-            ))}
+            <CalendarOffset offset={offsetDate} />
 
             {new Array(totalDaysCurrentMonth).fill(0).map((_, itemIdx) => (
-              <div key={itemIdx} className="w-[14vw] min-h-[7vw] border">
-                {itemIdx + 1}
-              </div>
+              <DayOfMonth
+                key={itemIdx}
+                date={itemIdx + 1}
+                events={tes(itemIdx + 1)}
+              />
             ))}
           </div>
         </div>
