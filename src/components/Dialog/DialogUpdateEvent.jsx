@@ -16,7 +16,7 @@ export default function DialogUpdateEvent({
     const matcher = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/
 
     const isValidEventName = !!eventName.length
-    const isValidTime = time >= 0 && time <= 23
+    const isValidTime = time >= 0 && time <= 12
     const isValidInvitees = matcher.test(invitees)
 
     return isValidEventName && isValidTime && isValidInvitees
