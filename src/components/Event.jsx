@@ -1,4 +1,8 @@
 /* eslint-disable react/prop-types */
+
+import Trash from "./Icons/Trash"
+import PencilSquare from "./Icons/PencilSquare"
+
 export default function Event({
   event,
   setShowDialogDelete,
@@ -22,27 +26,24 @@ export default function Event({
       id="event"
       className={`${
         event?.bgColor ?? "bg-slate-500"
-      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer`}
+      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer text-white`}
     >
-      <div className="gap-x-1  absolute top-0 right-0 hidden group-hover:flex">
-        <button
-          className="uppercase border rounded-sm px-2"
-          onClick={handleClick}
-        >
-          del
+      <div className="gap-x-1 py-1 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-inherit mix-blend-overlay border">
+        <button className="uppercase rounded-sm px-1" onClick={handleClick}>
+          <Trash />
         </button>
         <button
-          className="uppercase border rounded-sm px-2"
+          className="uppercase rounded-sm px-1"
           onClick={handleClickUpdate}
         >
-          update
+          <PencilSquare />
         </button>
       </div>
       <p id="event-name">{event.eventName}</p>
+      <p id="event-invitees">{event.invitees}</p>
       <p id="event-time">
         {event.time.value} {event.time.meridiem}
       </p>
-      <p id="event-invitees">{event.invitees}</p>
     </div>
   )
 }

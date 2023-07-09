@@ -197,7 +197,7 @@ function App() {
       <div className="wrapper mx-auto">
         <div className="calendar flex flex-col">
           <CalendarHeader dayList={dayList} />
-          <div className="calendar__body flex flex-wrap">
+          <div className="calendar__body flex flex-wrap bg-gray-300">
             <CalendarOffset offset={offsetDate} />
 
             {new Array(totalDaysCurrentMonth).fill(0).map((_, itemIdx) => (

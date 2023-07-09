@@ -32,7 +32,7 @@ export default function DayOfMonth({
   return (
     <div
       id="day-of-month"
-      className="w-[14vw] min-h-[7vw] border relative flex flex-col p-1 gap-y-1 cursor-pointer"
+      className="w-[14vw] min-h-[7vw] border border-gray-400 relative flex flex-col p-1 gap-y-1 cursor-pointer"
       onClick={(ev) => handleClickAddEvent(ev)}
     >
       <span id="day-of-month__date">{date}</span>
