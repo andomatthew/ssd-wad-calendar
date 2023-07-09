@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types"
+
 export default function DeleteConfirmation({
   setShowDialogDelete,
   selectedItem,
@@ -31,4 +32,10 @@ export default function DeleteConfirmation({
       </dialog>
     </div>
   )
+}
+
+DeleteConfirmation.propTypes = {
+  setShowDialogDelete: PropTypes.func,
+  selectedItem: PropTypes.object,
+  handleDeleteEvent: PropTypes.func,
 }

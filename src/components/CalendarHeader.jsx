@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types"
+
 export default function CalendarHeader({ dayList }) {
   return (
     <div className="calendar__header flex flex-wrap bg-black ">
@@ -9,4 +10,8 @@ export default function CalendarHeader({ dayList }) {
       ))}
     </div>
   )
+}
+
+CalendarHeader.propTypes = {
+  dayList: PropTypes.array,
 }

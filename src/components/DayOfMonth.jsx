@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react"
+import PropTypes from "prop-types"
 
 import Event from "./Event"
 
@@ -48,4 +48,14 @@ export default function DayOfMonth({
       ))}
     </div>
   )
+}
+
+DayOfMonth.propTypes = {
+  date: PropTypes.number,
+  events: PropTypes.object,
+  setShowDialogDelete: PropTypes.func,
+  setSelectedItem: PropTypes.func,
+  setShowDialogUpdate: PropTypes.func,
+  setSelectedDate: PropTypes.func,
+  setIsUpdate: PropTypes.bool,
 }

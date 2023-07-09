@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types"
 
 import Trash from "./Icons/Trash"
 import PencilSquare from "./Icons/PencilSquare"
@@ -46,4 +46,12 @@ export default function Event({
       </p>
     </div>
   )
+}
+
+Event.propTypes = {
+  event: PropTypes.object,
+  setShowDialogDelete: PropTypes.func,
+  setSelectedItem: PropTypes.func,
+  setShowDialogUpdate: PropTypes.func,
+  setIsUpdate: PropTypes.func,
 }

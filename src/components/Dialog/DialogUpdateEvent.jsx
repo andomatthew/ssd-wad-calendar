@@ -1,5 +1,6 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect, useMemo } from "react"
+import PropTypes from "prop-types"
+
 import Xmark from "../Icons/Xmark"
 
 export default function DialogUpdateEvent({
@@ -139,4 +140,14 @@ export default function DialogUpdateEvent({
       </dialog>
     </div>
   )
+}
+
+DialogUpdateEvent.propTypes = {
+  form: PropTypes.object,
+  isUpdate: PropTypes.bool,
+  setShowDialogUpdate: PropTypes.func,
+  createEvent: PropTypes.func,
+  setIsUpdate: PropTypes.func,
+  resetForm: PropTypes.func,
+  updateEvent: PropTypes.func,
 }
