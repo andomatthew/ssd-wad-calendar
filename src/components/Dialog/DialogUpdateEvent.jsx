@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import PropTypes from "prop-types"
 
-import Xmark from "../Icons/Xmark"
+import IconXmark from "../Icons/IconXmark"
 
 export default function DialogUpdateEvent({
   form,
@@ -103,7 +103,7 @@ export default function DialogUpdateEvent({
             className="bg-red-500 py-1 px-1 rounded-full text-white"
             onClick={handleClickClose}
           >
-            <Xmark />
+            <IconXmark />
           </button>
         </div>
         <form

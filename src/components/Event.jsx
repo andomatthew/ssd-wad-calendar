@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 
-import Trash from "./Icons/Trash"
-import PencilSquare from "./Icons/PencilSquare"
+import IconTrash from "./Icons/IconTrash"
+import IconPencilSquare from "./Icons/IconPencilSquare"
 
 export default function Event({
   event,
@@ -30,13 +30,13 @@ export default function Event({
     >
       <div className="gap-x-1 py-1 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-gray-950 mix-blend-overlay border">
         <button className="uppercase rounded-sm px-1" onClick={handleClick}>
-          <Trash />
+          <IconTrash />
         </button>
         <button
           className="uppercase rounded-sm px-1"
           onClick={handleClickUpdate}
         >
-          <PencilSquare />
+          <IconPencilSquare />
         </button>
       </div>
       <p id="event-name">{event.eventName}</p>
