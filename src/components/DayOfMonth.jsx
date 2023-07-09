@@ -1,30 +1,28 @@
-import { useEffect, useState } from "react"
+import { useCallback } from "react"
 import PropTypes from "prop-types"
 
 import Event from "./Event"
 
 export default function DayOfMonth({
-  date,
-  events,
-  setShowDialogDelete,
-  setSelectedItem,
-  setShowDialogUpdate,
-  setIsUpdate,
+  date = 0,
+  events = [],
+  setShowDialogDelete = () => {},
+  setSelectedItem = () => {},
+  setShowDialogUpdate = () => {},
+  setIsUpdate = () => {},
 }) {
-  const [totalEvents, setTotalEvents] = useState(0)
-
-  function handleClickAddEvent(ev) {
-    if (
-      ev?.target?.id.includes("event") ||
-      ev?.target?.id.includes("day-of-month")
-    ) {
-      setShowDialogUpdate(true)
-    }
-  }
-
-  useEffect(() => {
-    setTotalEvents(events?.length)
-  }, [events.length, totalEvents])
+  const handleClickAddEvent = useCallback(
+    (ev) => {
+      ev.preventDefault()
+      if (
+        ev?.target?.id.includes("event") ||
+        ev?.target?.id.includes("day-of-month")
+      ) {
+        setShowDialogUpdate(true)
+      }
+    },
+    [setShowDialogUpdate]
+  )
 
   return (
     <div
@@ -33,9 +31,9 @@ export default function DayOfMonth({
       onClick={(ev) => handleClickAddEvent(ev)}
     >
       <span id="day-of-month__date">{date}</span>
-      {events?.map((event, idx) => (
+      {events?.map((event) => (
         <Event
-          key={idx}
+          key={event?.id}
           event={event}
           setShowDialogDelete={setShowDialogDelete}
           setSelectedItem={setSelectedItem}

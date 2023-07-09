@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useMemo, useCallback, useState } from "react"
 
 import CalendarHeader from "./components/CalendarHeader"
 import CalendarOffset from "./components/CalendarOffset"
@@ -6,15 +6,13 @@ import DayOfMonth from "./components/DayOfMonth"
 import DialogDeleteConfirmation from "./components/Dialog/DialogDeleteConfirmation"
 import DialogUpdateEvent from "./components/Dialog/DialogUpdateEvent"
 
-import dayOfWeek from "./utils/dayOfWeek"
-import monthOfYear from "./utils/monthOfYear"
-import colors from "./utils/colors"
+import { DAYS_OF_WEEK, MONTH_OF_YEAR, COLORS } from "./constants"
 import setPersistedData from "./utils/setPersistedData"
 import getPersistedData from "./utils/getPersistedData"
 
 import "./assets/main.css"
 
-function App() {
+const App = () => {
   const [currentMonthInNumber, setCurrentMonthInNumber] = useState(0)
   const [currentMonth, setCurrentMonth] = useState("")
   const [currentYear, setCurrentYear] = useState(0)
@@ -43,76 +41,83 @@ function App() {
     return result
   }, [events])
 
-  function initCurrentMonth() {
+  const setColorToEvent = useCallback(
+    (selectedDate) => {
+      const unUsedColors = COLORS.filter(
+        (color) =>
+          color !==
+          events.find(
+            (event) => event.bgColor === color && event?.date === selectedDate
+          )?.bgColor
+      )
+      return unUsedColors[Math.floor(Math.random() * (unUsedColors.length - 1))]
+    },
+    [events]
+  )
+
+  const initCurrentMonth = useCallback(() => {
     const now = new Date()
-    const currentMonthLocal = monthOfYear[now.getMonth()]
+    const currentMonthLocal = MONTH_OF_YEAR[now.getMonth()]
     setCurrentMonth(currentMonthLocal)
     setCurrentMonthInNumber(now.getMonth())
-  }
+  }, [])
 
-  function initCurrentYear() {
+  const initCurrentYear = useCallback(() => {
     const now = new Date()
     const currentYearLocal = now.getFullYear()
     setCurrentYear(currentYearLocal)
-  }
+  }, [])
 
-  function initTotalDaysCurrentMonth() {
+  const initTotalDaysCurrentMonth = useCallback(() => {
     const nextMonthDate = new Date(currentYear, currentMonthInNumber + 1, 1)
     const lastDayOfMonth = new Date(nextMonthDate - 1)
     const totalDaysInCurrentMonth = lastDayOfMonth.getDate()
     setTotalDaysCurrentMonth(totalDaysInCurrentMonth)
-  }
+  }, [currentMonthInNumber, currentYear])
 
-  function setOffset() {
+  const setOffset = useCallback(() => {
     const startDay = new Date(
       currentYear,
       currentMonthInNumber,
       1
     ).toLocaleDateString(undefined, { weekday: "long" })
-    const offset = dayOfWeek.findIndex((day) => day === startDay)
+    const offset = DAYS_OF_WEEK.findIndex((day) => day === startDay)
     setOffsetDate(offset)
-  }
+  }, [currentMonthInNumber, currentYear])
 
-  function setEventsToDayOfMonth(date = 0) {
-    const result = events.filter((event) => event.date === date)
-    return result
-  }
+  const setEventsToDayOfMonth = useCallback(
+    (date = 0) => {
+      const result = events.filter((event) => event.date === date)
+      return result
+    },
+    [events]
+  )
 
-  function deleteEvent() {
+  const deleteEvent = useCallback(() => {
     const list = getPersistedData()
     const filteredList = list.filter((item) => item?.id !== selectedItem?.id)
     setPersistedData(filteredList)
     setEvents(filteredList)
     setShowDialogDelete(false)
-  }
+  }, [selectedItem])
 
-  function createEvent(body) {
-    const obj = {
-      ...body,
-      id: Date.now().toString(36),
-      bgColor: setColorToEvent(body?.date),
-    }
-    setEvents((arr) => [...arr, obj])
-    const updatedEvents = [...events]
-    updatedEvents.push(obj)
-    setPersistedData(updatedEvents)
-    setShowDialogUpdate(false)
-  }
+  const createEvent = useCallback(
+    (body) => {
+      const obj = {
+        ...body,
+        id: Date.now().toString(36),
+        bgColor: setColorToEvent(body?.date),
+      }
+      setEvents((arr) => [...arr, obj])
+      const updatedEvents = [...events]
+      updatedEvents.push(obj)
+      setPersistedData(updatedEvents)
+      setShowDialogUpdate(false)
+    },
+    [events, setColorToEvent]
+  )
 
-  function updateEvent(body) {
-    const obj = {
-      ...body,
-      bgColor: setColorToEvent(body?.date),
-    }
-    const updatedEvents = events.map((event) =>
-      event.id === obj.id ? obj : event
-    )
-    setEvents(updatedEvents)
-    setPersistedData(updatedEvents)
-    setShowDialogUpdate(false)
-  }
-
-  function resetForm() {
+  const resetForm = useCallback(() => {
     setForm({
       eventName: "",
       time: {
@@ -123,18 +128,24 @@ function App() {
       id: "",
       date: 0,
     })
-  }
+  }, [])
 
-  function setColorToEvent(selectedDate) {
-    const unUsedColors = colors.filter(
-      (color) =>
-        color !==
-        events.find(
-          (event) => event.bgColor === color && event?.date === selectedDate
-        )?.bgColor
-    )
-    return unUsedColors[Math.floor(Math.random() * (unUsedColors.length - 1))]
-  }
+  const updateEvent = useCallback(
+    (body) => {
+      const obj = {
+        ...body,
+        bgColor: setColorToEvent(body?.date),
+      }
+      const updatedEvents = events.map((event) =>
+        event.id === obj.id ? obj : event
+      )
+      setEvents(updatedEvents)
+      setPersistedData(updatedEvents)
+      setShowDialogUpdate(false)
+      resetForm()
+    },
+    [events, setColorToEvent, resetForm]
+  )
 
   useEffect(() => {
     const persistList = getPersistedData()
@@ -148,7 +159,7 @@ function App() {
     initCurrentYear()
     initTotalDaysCurrentMonth()
     setOffset()
-  })
+  }, [initCurrentMonth, initCurrentYear, initTotalDaysCurrentMonth, setOffset])
 
   useEffect(() => {
     if (isUpdate) {
