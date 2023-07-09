@@ -39,6 +39,7 @@ export default function DialogUpdateEvent({
         ...body,
         id: form.id,
         date: form.date,
+        bgColor: form.bgColor,
       })
     }
   }

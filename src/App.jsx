@@ -33,6 +33,26 @@ const monthList = [
   "December",
 ]
 
+const colors = [
+  "bg-red-500",
+  "bg-orange-500",
+  "bg-amber-500",
+  "bg-yellow-500",
+  "bg-lime-500",
+  "bg-green-500",
+  "bg-emerald-500",
+  "bg-teal-500",
+  "bg-cyan-500",
+  "bg-sky-500",
+  "bg-blue-500",
+  "bg-indigo-500",
+  "bg-violet-500",
+  "bg-purple-500",
+  "bg-fuchsia-500",
+  "bg-pink-500",
+  "bg-rose-500",
+]
+
 function App() {
   const [currentMonthInNumber, setCurrentMonthInNumber] = useState(0)
   const [currentMonth, setCurrentMonth] = useState("")
@@ -53,6 +73,7 @@ function App() {
     invitees: "",
     id: "",
     date: 0,
+    bgColor: "",
   })
   const [isUpdate, setIsUpdate] = useState(false)
 
@@ -104,6 +125,7 @@ function App() {
       ...body,
       id: Date.now().toString(36),
       date: selectedDate,
+      bgColor: setColorToEvent(selectedDate),
     }
     setEvents((arr) => [...arr, obj])
     const updatedEvents = [...events]
@@ -132,6 +154,17 @@ function App() {
       id: "",
       date: 0,
     })
+  }
+
+  function setColorToEvent(selectedDate) {
+    const unUsedColors = colors.filter(
+      (color) =>
+        color !==
+        events.find(
+          (event) => event.bgColor === color && event?.date === selectedDate
+        )?.bgColor
+    )
+    return unUsedColors[Math.floor(Math.random() * (unUsedColors.length - 1))]
   }
 
   useEffect(() => {
