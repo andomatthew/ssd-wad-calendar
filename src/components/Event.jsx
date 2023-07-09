@@ -4,13 +4,13 @@ import IconTrash from "./Icons/IconTrash"
 import IconPencilSquare from "./Icons/IconPencilSquare"
 
 export default function Event({
-  event,
-  setShowDialogDelete,
-  setSelectedItem,
-  setShowDialogUpdate,
-  setIsUpdate,
+  event = {},
+  setShowDialogDelete = () => {},
+  setSelectedItem = () => {},
+  setShowDialogUpdate = () => {},
+  setIsUpdate = () => {},
 }) {
-  function handleClick() {
+  function handleClickDelete() {
     setSelectedItem(event)
     setShowDialogDelete(true)
   }
@@ -26,10 +26,13 @@ export default function Event({
       id="event"
       className={`${
         event?.bgColor ?? "bg-slate-500"
-      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer text-white px-2 gap-y-1 max-h-[50%]`}
+      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer text-white px-2 gap-y-1 h-[50%] max-h-[140px]`}
     >
-      <div className="gap-x-1 py-1 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-gray-950 mix-blend-overlay border">
-        <button className="uppercase rounded-sm px-1" onClick={handleClick}>
+      <div className="gap-x-1 py-2 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-gray-950 mix-blend-overlay border">
+        <button
+          className="uppercase rounded-sm px-1"
+          onClick={handleClickDelete}
+        >
           <IconTrash />
         </button>
         <button
@@ -49,7 +52,15 @@ export default function Event({
 }
 
 Event.propTypes = {
-  event: PropTypes.object,
+  event: PropTypes.shape({
+    eventName: PropTypes.string.isRequired,
+    invitees: PropTypes.string.isRequired,
+    time: PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      meridiem: PropTypes.string.isRequired,
+    }),
+    bgColor: PropTypes.string,
+  }).isRequired,
   setShowDialogDelete: PropTypes.func,
   setSelectedItem: PropTypes.func,
   setShowDialogUpdate: PropTypes.func,

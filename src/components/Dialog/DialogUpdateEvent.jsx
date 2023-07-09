@@ -1,18 +1,18 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import PropTypes from "prop-types"
 
 import IconXmark from "../Icons/IconXmark"
 
 export default function DialogUpdateEvent({
-  form,
-  isUpdate,
-  setShowDialogUpdate,
-  createEvent,
-  setIsUpdate,
-  resetForm,
-  updateEvent,
-  restrictedDates,
-  totalDaysCurrentMonth,
+  form = {},
+  isUpdate = false,
+  setShowDialogUpdate = () => {},
+  createEvent = () => {},
+  setIsUpdate = () => {},
+  resetForm = () => {},
+  updateEvent = () => {},
+  restrictedDates = [],
+  totalDaysCurrentMonth = 0,
 }) {
   const [eventName, setEventName] = useState("")
   const [time, setTime] = useState("")
@@ -49,41 +49,48 @@ export default function DialogUpdateEvent({
     isUpdate,
   ])
 
-  function countSpecificDuplicates(arr, specificDate) {
-    let counter = 0
+  function countSpecificDuplicates(arr = [], specificDate = "") {
+    return arr.filter((date) => date === Number(specificDate)).length
+  }
 
-    for (let i = 0; i < arr?.length; i++) {
-      if (arr[i] === Number(specificDate)) {
-        counter++
+  const handleSubmit = useCallback(
+    (ev) => {
+      ev.preventDefault()
+      const body = {
+        eventName,
+        time: { value: Number(time), meridiem },
+        invitees,
+        date: Number(date),
       }
-    }
-    return counter
-  }
-
-  function handleSubmit(ev) {
-    ev.preventDefault()
-    const body = {
+      if (!isUpdate) {
+        createEvent(body)
+      } else {
+        updateEvent({
+          ...body,
+          id: form.id,
+          bgColor: form.bgColor,
+        })
+      }
+    },
+    [
+      createEvent,
+      updateEvent,
       eventName,
-      time: { value: Number(time), meridiem },
+      time,
       invitees,
-      date: Number(date),
-    }
-    if (!isUpdate) {
-      createEvent(body)
-    } else {
-      updateEvent({
-        ...body,
-        id: form.id,
-        bgColor: form.bgColor,
-      })
-    }
-  }
+      date,
+      meridiem,
+      form.bgColor,
+      form.id,
+      isUpdate,
+    ]
+  )
 
-  function handleClickClose() {
+  const handleClickClose = useCallback(() => {
     setIsUpdate(false)
     setShowDialogUpdate(false)
     resetForm()
-  }
+  }, [setIsUpdate, setShowDialogUpdate, resetForm])
 
   useEffect(() => {
     if (!!form.eventName && !!form.time && form.invitees && form.date) {
