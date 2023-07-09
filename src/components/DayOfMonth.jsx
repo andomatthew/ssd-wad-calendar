@@ -16,9 +16,8 @@ export default function DayOfMonth({
 
   function handleClickAddEvent(ev) {
     if (
-      (ev?.target?.id.includes("event") ||
-        ev?.target?.id.includes("day-of-month")) &&
-      totalEvents < 3
+      ev?.target?.id.includes("event") ||
+      ev?.target?.id.includes("day-of-month")
     ) {
       setShowDialogUpdate(true)
       setSelectedDate(date)
@@ -52,10 +51,10 @@ export default function DayOfMonth({
 
 DayOfMonth.propTypes = {
   date: PropTypes.number,
-  events: PropTypes.object,
+  events: PropTypes.array,
   setShowDialogDelete: PropTypes.func,
   setSelectedItem: PropTypes.func,
   setShowDialogUpdate: PropTypes.func,
   setSelectedDate: PropTypes.func,
-  setIsUpdate: PropTypes.bool,
+  setIsUpdate: PropTypes.func,
 }

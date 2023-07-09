@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 
 import CalendarHeader from "./components/CalendarHeader"
 import CalendarOffset from "./components/CalendarOffset"
@@ -77,6 +77,11 @@ function App() {
   })
   const [isUpdate, setIsUpdate] = useState(false)
 
+  const restrictedDates = useMemo(() => {
+    const result = events.map((event) => event?.date)
+    return result
+  }, [events])
+
   function initCurrentMonth() {
     const now = new Date()
     const currentMonthLocal = monthList[now.getMonth()]
@@ -124,7 +129,6 @@ function App() {
     const obj = {
       ...body,
       id: Date.now().toString(36),
-      date: selectedDate,
       bgColor: setColorToEvent(selectedDate),
     }
     setEvents((arr) => [...arr, obj])
@@ -135,8 +139,12 @@ function App() {
   }
 
   function updateEvent(body) {
+    const obj = {
+      ...body,
+      bgColor: setColorToEvent(body?.date),
+    }
     const updatedEvents = events.map((event) =>
-      event.id === body.id ? body : event
+      event.id === obj.id ? obj : event
     )
     setEvents(updatedEvents)
     localStorage.setItem("list", JSON.stringify(updatedEvents))
@@ -231,6 +239,8 @@ function App() {
           setIsUpdate={setIsUpdate}
           resetForm={resetForm}
           updateEvent={updateEvent}
+          restrictedDates={restrictedDates}
+          totalDaysCurrentMonth={totalDaysCurrentMonth}
         />
       )}
     </main>
