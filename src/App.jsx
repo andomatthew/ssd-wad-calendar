@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 
 import CalendarHeader from "./components/CalendarHeader"
 import CalendarOffset from "./components/CalendarOffset"
@@ -6,52 +6,13 @@ import DayOfMonth from "./components/DayOfMonth"
 import DialogDeleteConfirmation from "./components/Dialog/DialogDeleteConfirmation"
 import DialogUpdateEvent from "./components/Dialog/DialogUpdateEvent"
 
+import dayOfWeek from "./utils/dayOfWeek"
+import monthOfYear from "./utils/monthOfYear"
+import colors from "./utils/colors"
+import setPersistedData from "./utils/setPersistedData"
+import getPersistedData from "./utils/getPersistedData"
+
 import "./assets/main.css"
-
-const dayList = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-]
-
-const monthList = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]
-
-const colors = [
-  "bg-red-500",
-  "bg-orange-500",
-  "bg-amber-500",
-  "bg-yellow-500",
-  "bg-lime-500",
-  "bg-green-500",
-  "bg-emerald-500",
-  "bg-teal-500",
-  "bg-cyan-500",
-  "bg-sky-500",
-  "bg-blue-500",
-  "bg-indigo-500",
-  "bg-violet-500",
-  "bg-purple-500",
-  "bg-fuchsia-500",
-  "bg-pink-500",
-  "bg-rose-500",
-]
 
 function App() {
   const [currentMonthInNumber, setCurrentMonthInNumber] = useState(0)
@@ -77,9 +38,14 @@ function App() {
   })
   const [isUpdate, setIsUpdate] = useState(false)
 
+  const restrictedDates = useMemo(() => {
+    const result = events.map((event) => event?.date)
+    return result
+  }, [events])
+
   function initCurrentMonth() {
     const now = new Date()
-    const currentMonthLocal = monthList[now.getMonth()]
+    const currentMonthLocal = monthOfYear[now.getMonth()]
     setCurrentMonth(currentMonthLocal)
     setCurrentMonthInNumber(now.getMonth())
   }
@@ -103,7 +69,7 @@ function App() {
       currentMonthInNumber,
       1
     ).toLocaleDateString(undefined, { weekday: "long" })
-    const offset = dayList.findIndex((day) => day === startDay)
+    const offset = dayOfWeek.findIndex((day) => day === startDay)
     setOffsetDate(offset)
   }
 
@@ -113,9 +79,9 @@ function App() {
   }
 
   function deleteEvent() {
-    const list = JSON.parse(localStorage.getItem("list"))
+    const list = getPersistedData()
     const filteredList = list.filter((item) => item?.id !== selectedItem?.id)
-    localStorage.setItem("list", JSON.stringify(filteredList))
+    setPersistedData(filteredList)
     setEvents(filteredList)
     setShowDialogDelete(false)
   }
@@ -124,22 +90,25 @@ function App() {
     const obj = {
       ...body,
       id: Date.now().toString(36),
-      date: selectedDate,
       bgColor: setColorToEvent(selectedDate),
     }
     setEvents((arr) => [...arr, obj])
     const updatedEvents = [...events]
     updatedEvents.push(obj)
-    localStorage.setItem("list", JSON.stringify(updatedEvents))
+    setPersistedData(updatedEvents)
     setShowDialogUpdate(false)
   }
 
   function updateEvent(body) {
+    const obj = {
+      ...body,
+      bgColor: setColorToEvent(body?.date),
+    }
     const updatedEvents = events.map((event) =>
-      event.id === body.id ? body : event
+      event.id === obj.id ? obj : event
     )
     setEvents(updatedEvents)
-    localStorage.setItem("list", JSON.stringify(updatedEvents))
+    setPersistedData(updatedEvents)
     setShowDialogUpdate(false)
   }
 
@@ -168,7 +137,7 @@ function App() {
   }
 
   useEffect(() => {
-    const persistList = JSON.parse(localStorage.getItem("list"))
+    const persistList = getPersistedData()
     if (persistList?.length && !events?.length) {
       setEvents(persistList)
     }
@@ -196,8 +165,8 @@ function App() {
       </h1>
       <div className="wrapper mx-auto">
         <div className="calendar flex flex-col">
-          <CalendarHeader dayList={dayList} />
-          <div className="calendar__body flex flex-wrap">
+          <CalendarHeader />
+          <div className="calendar__body flex flex-wrap bg-gray-300">
             <CalendarOffset offset={offsetDate} />
 
             {new Array(totalDaysCurrentMonth).fill(0).map((_, itemIdx) => (
@@ -231,6 +200,8 @@ function App() {
           setIsUpdate={setIsUpdate}
           resetForm={resetForm}
           updateEvent={updateEvent}
+          restrictedDates={restrictedDates}
+          totalDaysCurrentMonth={totalDaysCurrentMonth}
         />
       )}
     </main>

@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react"
+import PropTypes from "prop-types"
 
 import Event from "./Event"
 
@@ -16,9 +16,8 @@ export default function DayOfMonth({
 
   function handleClickAddEvent(ev) {
     if (
-      (ev?.target?.id.includes("event") ||
-        ev?.target?.id.includes("day-of-month")) &&
-      totalEvents < 3
+      ev?.target?.id.includes("event") ||
+      ev?.target?.id.includes("day-of-month")
     ) {
       setShowDialogUpdate(true)
       setSelectedDate(date)
@@ -32,7 +31,7 @@ export default function DayOfMonth({
   return (
     <div
       id="day-of-month"
-      className="w-[14vw] min-h-[7vw] border relative flex flex-col p-1 gap-y-1 cursor-pointer"
+      className="w-[14vw] min-h-[7vw] border border-gray-400 relative flex flex-col p-1 gap-y-1 cursor-pointer"
       onClick={(ev) => handleClickAddEvent(ev)}
     >
       <span id="day-of-month__date">{date}</span>
@@ -48,4 +47,14 @@ export default function DayOfMonth({
       ))}
     </div>
   )
+}
+
+DayOfMonth.propTypes = {
+  date: PropTypes.number,
+  events: PropTypes.array,
+  setShowDialogDelete: PropTypes.func,
+  setSelectedItem: PropTypes.func,
+  setShowDialogUpdate: PropTypes.func,
+  setSelectedDate: PropTypes.func,
+  setIsUpdate: PropTypes.func,
 }
