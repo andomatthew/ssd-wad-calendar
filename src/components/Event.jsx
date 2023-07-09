@@ -20,7 +20,9 @@ export default function Event({
   return (
     <div
       id="event"
-      className="bg-purple-300 flex-grow flex flex-col justify-around text-sm relative group cursor-pointer"
+      className={`${
+        event?.bgColor ?? "bg-slate-500"
+      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer`}
     >
       <div className="gap-x-1  absolute top-0 right-0 hidden group-hover:flex">
         <button
