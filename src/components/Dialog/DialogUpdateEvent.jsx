@@ -6,6 +6,9 @@ export default function DialogUpdateEvent({
   isUpdate,
   setShowDialogUpdate,
   createEvent,
+  setIsUpdate,
+  resetForm,
+  updateEvent,
 }) {
   const [eventName, setEventName] = useState("")
   const [time, setTime] = useState("")
@@ -24,22 +27,33 @@ export default function DialogUpdateEvent({
 
   function handleSubmit(ev) {
     ev.preventDefault()
-    console.log({
+    const body = {
       eventName,
       time: { value: Number(time), meridiem },
       invitees,
-    })
-    createEvent({
-      eventName,
-      time: { value: Number(time), meridiem },
-      invitees,
-    })
+    }
+    if (!isUpdate) {
+      createEvent(body)
+    } else {
+      updateEvent({
+        ...body,
+        id: form.id,
+        date: form.date,
+      })
+    }
+  }
+
+  function handleClickClose() {
+    setIsUpdate(false)
+    setShowDialogUpdate(false)
+    resetForm()
   }
 
   useEffect(() => {
     if (!!form.eventName && !!form.time && form.invitees) {
       setEventName(form.eventName)
-      setTime(form.time)
+      setTime(form.time.value)
+      setMeridiem(form.time.meridiem)
       setInvitees(form.invitees)
     }
   }, [form])
@@ -50,7 +64,7 @@ export default function DialogUpdateEvent({
         <div className="flex justify-end">
           <button
             className="bg-red-500 py-1 px-3 rounded-full text-white"
-            onClick={() => setShowDialogUpdate(false)}
+            onClick={handleClickClose}
           >
             X
           </button>
