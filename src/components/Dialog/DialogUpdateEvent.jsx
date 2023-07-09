@@ -28,16 +28,26 @@ export default function DialogUpdateEvent({
     const isValidInvitees = matcher.test(invitees)
     const isValidEventDate =
       !!date.length && date >= 1 && date <= totalDaysCurrentMonth
-    const isAbleToAddEvents = countSpecificDuplicates(restrictedDates, date)
+    const isAbleToAddEvents = !!(
+      countSpecificDuplicates(restrictedDates, date) < 3
+    )
 
     return (
       isValidEventName &&
       isValidTime &&
       isValidInvitees &&
       isValidEventDate &&
-      isAbleToAddEvents < 3
+      (isAbleToAddEvents || isUpdate)
     )
-  }, [eventName, time, invitees, date, restrictedDates, totalDaysCurrentMonth])
+  }, [
+    eventName,
+    time,
+    invitees,
+    date,
+    restrictedDates,
+    totalDaysCurrentMonth,
+    isUpdate,
+  ])
 
   function countSpecificDuplicates(arr, specificDate) {
     let counter = 0

@@ -22,7 +22,7 @@ function App() {
   const [offsetDate, setOffsetDate] = useState(0)
   const [events, setEvents] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
-  const [selectedDate, setSelectedDate] = useState(0)
+
   const [showDialogDelete, setShowDialogDelete] = useState(false)
   const [showDialogUpdate, setShowDialogUpdate] = useState(false)
   const [form, setForm] = useState({
@@ -90,7 +90,7 @@ function App() {
     const obj = {
       ...body,
       id: Date.now().toString(36),
-      bgColor: setColorToEvent(selectedDate),
+      bgColor: setColorToEvent(body?.date),
     }
     setEvents((arr) => [...arr, obj])
     const updatedEvents = [...events]
@@ -177,7 +177,6 @@ function App() {
                 setShowDialogDelete={setShowDialogDelete}
                 setSelectedItem={setSelectedItem}
                 setShowDialogUpdate={setShowDialogUpdate}
-                setSelectedDate={setSelectedDate}
                 setIsUpdate={setIsUpdate}
               />
             ))}
