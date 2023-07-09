@@ -26,9 +26,9 @@ export default function Event({
       id="event"
       className={`${
         event?.bgColor ?? "bg-slate-500"
-      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer text-white`}
+      } flex-grow flex flex-col justify-around text-sm relative group cursor-pointer text-white px-2 gap-y-1 max-h-[50%]`}
     >
-      <div className="gap-x-1 py-1 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-inherit mix-blend-overlay border">
+      <div className="gap-x-1 py-1 absolute top-1 right-1 hidden group-hover:flex rounded-sm bg-gray-950 mix-blend-overlay border">
         <button className="uppercase rounded-sm px-1" onClick={handleClick}>
           <Trash />
         </button>
