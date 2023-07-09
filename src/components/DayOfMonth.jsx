@@ -9,7 +9,6 @@ export default function DayOfMonth({
   setShowDialogDelete,
   setSelectedItem,
   setShowDialogUpdate,
-  setSelectedDate,
   setIsUpdate,
 }) {
   const [totalEvents, setTotalEvents] = useState(0)
@@ -20,7 +19,6 @@ export default function DayOfMonth({
       ev?.target?.id.includes("day-of-month")
     ) {
       setShowDialogUpdate(true)
-      setSelectedDate(date)
     }
   }
 
@@ -55,6 +53,5 @@ DayOfMonth.propTypes = {
   setShowDialogDelete: PropTypes.func,
   setSelectedItem: PropTypes.func,
   setShowDialogUpdate: PropTypes.func,
-  setSelectedDate: PropTypes.func,
   setIsUpdate: PropTypes.func,
 }

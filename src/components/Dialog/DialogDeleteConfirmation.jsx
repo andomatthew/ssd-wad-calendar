@@ -12,7 +12,7 @@ export default function DeleteConfirmation({
         className="flex flex-col justify-between w-[30vw] h-[20vh] rounded-md"
       >
         <h6>
-          Are you sure want to delete event {selectedItem?.eventName} on{" "}
+          Are you sure want to delete event {selectedItem?.eventName} on Date{" "}
           {selectedItem.date}?
         </h6>
         <div className="flex justify-end gap-x-2">
