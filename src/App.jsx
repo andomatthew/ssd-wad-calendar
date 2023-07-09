@@ -44,7 +44,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(0)
   const [showDialogDelete, setShowDialogDelete] = useState(false)
   const [showDialogUpdate, setShowDialogUpdate] = useState(false)
-  const [form] = useState({
+  const [form, setForm] = useState({
     eventName: "",
     time: {
       value: 0,
@@ -112,6 +112,28 @@ function App() {
     setShowDialogUpdate(false)
   }
 
+  function updateEvent(body) {
+    const updatedEvents = events.map((event) =>
+      event.id === body.id ? body : event
+    )
+    setEvents(updatedEvents)
+    localStorage.setItem("list", JSON.stringify(updatedEvents))
+    setShowDialogUpdate(false)
+  }
+
+  function resetForm() {
+    setForm({
+      eventName: "",
+      time: {
+        value: 0,
+        meridiem: "AM",
+      },
+      invitees: "",
+      id: "",
+      date: 0,
+    })
+  }
+
   useEffect(() => {
     const persistList = JSON.parse(localStorage.getItem("list"))
     if (persistList?.length && !events?.length) {
@@ -125,6 +147,14 @@ function App() {
     initTotalDaysCurrentMonth()
     setOffset()
   })
+
+  useEffect(() => {
+    if (isUpdate) {
+      setForm({
+        ...selectedItem,
+      })
+    }
+  }, [isUpdate, selectedItem])
 
   return (
     <main>
@@ -146,6 +176,7 @@ function App() {
                 setSelectedItem={setSelectedItem}
                 setShowDialogUpdate={setShowDialogUpdate}
                 setSelectedDate={setSelectedDate}
+                setIsUpdate={setIsUpdate}
               />
             ))}
           </div>
@@ -164,6 +195,9 @@ function App() {
           isUpdate={isUpdate}
           setShowDialogUpdate={setShowDialogUpdate}
           createEvent={createEvent}
+          setIsUpdate={setIsUpdate}
+          resetForm={resetForm}
+          updateEvent={updateEvent}
         />
       )}
     </main>

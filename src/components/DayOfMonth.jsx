@@ -10,6 +10,7 @@ export default function DayOfMonth({
   setSelectedItem,
   setShowDialogUpdate,
   setSelectedDate,
+  setIsUpdate,
 }) {
   const [totalEvents, setTotalEvents] = useState(0)
 
@@ -41,6 +42,8 @@ export default function DayOfMonth({
           event={event}
           setShowDialogDelete={setShowDialogDelete}
           setSelectedItem={setSelectedItem}
+          setShowDialogUpdate={setShowDialogUpdate}
+          setIsUpdate={setIsUpdate}
         />
       ))}
     </div>
